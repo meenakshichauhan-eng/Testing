@@ -54,7 +54,8 @@ class HelloWorldApplicationTests {
         mockMvc.perform(get("/index.html").with(user("hello")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("text/html"))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Hello, World!")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Hello, World!")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Signed in")));
     }
 
     @Test
