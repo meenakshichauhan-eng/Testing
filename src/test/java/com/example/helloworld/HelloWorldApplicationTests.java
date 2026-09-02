@@ -55,7 +55,8 @@ class HelloWorldApplicationTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("text/html"))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Hello, World!")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Signed in")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Signed in")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Your session is protected.")));
     }
 
     @Test
