@@ -48,6 +48,7 @@ class HelloWorldApplicationTests {
                 .andExpect(content().contentTypeCompatibleWith("text/html"))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Sign in")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("autofocus")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("spellcheck=\"false\"")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("aria-describedby=\"login-instructions\"")));
     }
 
