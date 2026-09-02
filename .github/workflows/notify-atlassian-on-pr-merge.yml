@@ -26,6 +26,7 @@ jobs:
         run: |
           http_status=$(curl -s -o response.json -w "%{http_code}" -X POST "${{ secrets.ATLASSIAN_WEBHOOK_URL }}" \
             -H "Content-Type: application/json" \
+            -H "X-Atlassian-Token: ${{ secrets.ATLASSIAN_WEBHOOK_SECRET }}" \
             -d '{
               "pull_request": {
                 "html_url": "${{ github.event.pull_request.html_url }}",
