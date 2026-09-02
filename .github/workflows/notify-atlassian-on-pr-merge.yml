@@ -1,7 +1,7 @@
 name: Notify Atlassian on PR Merge
 
 # Requires repository secrets named ATLASSIAN_WEBHOOK_URL and
-# ATLASSIAN_WEBHOOK_TOKEN containing the Atlassian Automation Incoming Webhook
+# ATLASSIAN_WEBHOOK_SECRET containing the Atlassian Automation Incoming Webhook
 # URL and token. Add them under Settings → Secrets and variables → Actions.
 
 on:
@@ -26,7 +26,7 @@ jobs:
         run: |
           http_status=$(curl -s -o response.json -w "%{http_code}" -X POST "${{ secrets.ATLASSIAN_WEBHOOK_URL }}" \
             -H "Content-Type: application/json" \
-            -H "X-Automation-Webhook-Token: ${{ secrets.ATLASSIAN_WEBHOOK_TOKEN }}" \
+            -H "X-Automation-Webhook-Token: ${{ secrets.ATLASSIAN_WEBHOOK_SECRET }}" \
             -d '{
               "pull_request": {
                 "html_url": "${{ github.event.pull_request.html_url }}",
