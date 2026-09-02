@@ -46,7 +46,8 @@ class HelloWorldApplicationTests {
         mockMvc.perform(get("/login.html"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("text/html"))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Sign in")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Sign in")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("autofocus")));
     }
 
     @Test
