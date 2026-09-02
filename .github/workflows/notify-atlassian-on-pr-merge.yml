@@ -1,0 +1,42 @@
+name: Notify Atlassian on PR Merge
+
+# Requires a repository secret named ATLASSIAN_WEBHOOK_URL containing the
+# Atlassian Automation Incoming Webhook URL.
+# Add it under Settings → Secrets and variables → Actions.
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  notify-atlassian:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send PR payload to Atlassian Automation Webhook
+        run: |
+          curl -X POST "${{ secrets.ATLASSIAN_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "pull_request": {
+                "html_url": "${{ github.event.pull_request.html_url }}",
+                "title": "${{ github.event.pull_request.title }}",
+                "body": ${{ toJSON(github.event.pull_request.body) }},
+                "merged": ${{ github.event.pull_request.merged }},
+                "number": ${{ github.event.pull_request.number }},
+                "user": {
+                  "login": "${{ github.event.pull_request.user.login }}"
+                },
+                "base": {
+                  "ref": "${{ github.event.pull_request.base.ref }}"
+                },
+                "head": {
+                  "ref": "${{ github.event.pull_request.head.ref }}"
+                }
+              },
+              "action": "${{ github.event.action }}",
+              "repository": {
+                "full_name": "${{ github.repository }}"
+              }
+            }'
