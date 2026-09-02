@@ -15,7 +15,7 @@ public class HelloWorldApplication {
     @RestController
     static class HelloWorldController {
 
-        @GetMapping("/")
+        @GetMapping("/api/hello")
         String helloWorld() {
             return "Hello, World!";
         }
