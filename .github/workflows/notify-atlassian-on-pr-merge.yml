@@ -10,7 +10,14 @@ on:
 
 jobs:
   notify-atlassian:
-    if: github.event.pull_request.merged == true
+    # Only fire for merged PRs whose description has the "Documentation"
+    # checkbox checked, e.g. "- [x] Documentation".
+    # To gate on a label instead (or in addition), replace/extend this
+    # condition with:
+    #   contains(github.event.pull_request.labels.*.name, 'documentation')
+    if: |
+      github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.body, '[x] Documentation')
     runs-on: ubuntu-latest
     permissions: {}
 
