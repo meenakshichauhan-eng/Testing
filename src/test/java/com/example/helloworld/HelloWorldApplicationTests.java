@@ -9,7 +9,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -19,15 +21,37 @@ class HelloWorldApplicationTests {
     private MockMvc mockMvc;
 
     @Test
-    void rootServesHelloWorldPage() throws Exception {
+    void unauthenticatedRootRedirectsToLogin() throws Exception {
         mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    void authenticatedRootServesHelloWorldPage() throws Exception {
+        mockMvc.perform(get("/").with(user("hello")))
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl("index.html"));
     }
 
     @Test
-    void helloWorldPageContainsGreeting() throws Exception {
-        mockMvc.perform(get("/index.html"))
+    void loginPageIsPublic() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/login.html"));
+    }
+
+    @Test
+    void loginHtmlIsPublic() throws Exception {
+        mockMvc.perform(get("/login.html"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("text/html"))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Sign in")));
+    }
+
+    @Test
+    void authenticatedHelloWorldPageContainsGreeting() throws Exception {
+        mockMvc.perform(get("/index.html").with(user("hello")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("text/html"))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Hello, World!")));
@@ -35,7 +59,7 @@ class HelloWorldApplicationTests {
 
     @Test
     void helloApiReturnsGreeting() throws Exception {
-        mockMvc.perform(get("/api/hello"))
+        mockMvc.perform(get("/api/hello").with(user("hello")))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello, World!"));
     }
