@@ -12,6 +12,7 @@ jobs:
   notify-atlassian:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    permissions: {}
 
     steps:
       - name: Send PR payload to Atlassian Automation Webhook
